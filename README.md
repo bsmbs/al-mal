@@ -1,10 +1,11 @@
 ![AL MAL](https://raw.githubusercontent.com/pizza61/al-mal/master/icons/icon-48.png)
-![AL MAL](https://i.imgur.com/pXqpKNZ.png)
 
 # AL MAL
 Extends AniList with data from MyAnimeList
 
 currently it's very early version but it works wow
+
+![AL MAL](https://i.imgur.com/pXqpKNZ.png)
 
 # Credits
 * MAL ofc
