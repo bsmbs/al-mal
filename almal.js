@@ -7,10 +7,6 @@ window.onclick = function(event) {
 }
 setTimeout(doThings, 1000);
 
-window.addEventListener("load", function() {
-    alert("ss");
-})
-
 window.addEventListener("popstate", function() {
     clearThings();
     setTimeout(doThings, 1000);
@@ -26,7 +22,6 @@ function doThings() {
     let type = window.location.pathname.split("/")[1];
     fetchThings(title, type)
     .then(result => {
-        console.dir(result)
         let parent = document.querySelector(".sidebar .data");
 
         let dataSet = document.createElement("div");
@@ -78,7 +73,6 @@ async function fetchThings(query, type) {
         const chances = match(query, data.results);
         return data.results[chances.index];
     } else {
-        console.log("not")
     }
 }
 
