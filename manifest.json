@@ -1,0 +1,25 @@
+{
+    "manifest_version": 2,
+    "name": "AL MAL",
+    "author": "pizza61",
+    "version_name": "0.1 ALPHA",
+    "version": "0.1",
+    "description": "Extends AniList with data from MyAnimeList (powered by jikan.moe)",
+    "icons": {
+        "48": "icons/icon-48.png"
+    },
+    "applications": {
+        "gecko": {
+            "id": "almal@paell.xyz"
+        }
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://anilist.co/*"],
+            "js": ["almal.js", "compare-strings.js"]
+        }
+    ],
+    "permissions": [
+        "*://anilist.co/*", "https://api.jikan.moe/*"
+    ]
+}
