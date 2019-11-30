@@ -7,6 +7,7 @@ window.onclick = function(event) {
 }
 setTimeout(doThings, 1000);
 
+
 window.addEventListener("popstate", function() {
     clearThings();
     setTimeout(doThings, 1000);
@@ -19,33 +20,39 @@ function clearThings() {
 function doThings() {
     clearThings();
     let title = document.querySelector('h1').innerText;
-    let type = window.location.pathname.split("/")[1];
-    fetchThings(title, type)
+    let contentType = window.location.pathname.split("/")[1];
+    fetchThings(title, contentType)
     .then(result => {
         let parent = document.querySelector(".sidebar .data");
 
-        let dataSet = document.createElement("div");
-        dataSet.classList.add("data-set", "almal");
-        dataSet.style.paddingBottom = "14px";
+        let mids = document.querySelectorAll(".sidebar .data .data-set");
+        let mid = [].find.call(mids, function(s) {
+            return s.childNodes[0].innerText == "Genres";
+        });
 
-        let type = document.createElement("div");
-        type.classList.add("type");
-        type.innerText = "MAL Score";
-        type.style.fontSize = "1.3rem";
-        type.style.fontWeight = "500";
-        type.style.paddingBottom = "5px";
+        // MAL Score
+        let score = dataSet();
 
-        let value = document.createElement("div");
-        value.classList.add("value");
-        value.innerText = result.score;
-        value.style.color = "rgb(var(--color-text-lighter))";
-        value.style.fontSize = "1.2rem";
-        value.style.lineHeight = "1.3";
+        let scoreT = tElement("MAL Score");
+        let scoreV = vElement(result.score);
 
-        let link = document.createElement("div");
-        link.classList.add("data-set", "almal");
-        link.style.paddingBottom = "14px";
+        score.append(scoreT, scoreV)
 
+        // Rating
+        if(contentType == "anime") {
+            let rating = dataSet();
+
+            let ratingT = tElement("Rating");
+            let ratingV = vElement(result.rated);
+    
+            rating.append(ratingT, ratingV);
+            parent.insertBefore(rating, mid.nextSibling);
+        }
+        
+
+        // Go to MyAnimeList
+        let link = dataSet();
+        
         let linkType = document.createElement("a");
         linkType.innerText = "Go to MyAnimeList";
         linkType.style.color = "rgb(var(--color-blue))";
@@ -56,14 +63,24 @@ function doThings() {
 
         link.appendChild(linkType);
 
-        dataSet.appendChild(type);
-        dataSet.appendChild(value);
-
-        parent.insertBefore(dataSet, parent.firstChild);
+        // Insert in sidebar
+        parent.insertBefore(score, parent.firstChild);
         parent.insertBefore(link, parent.firstChild);
+        // Reviews
+        fetchReviews(result.mal_id, contentType)
+        .then(reviews => {
+            reviews.length = 5;
 
+            let container = document.querySelector(".review-wrap");
+            reviews.forEach(rev => {
+                let content = rev.content.split(" ").splice(0, 15).join(" ")+"...";
+                let rcard = reviewCard(rev.reviewer.image_url, content, rev.helpful_count, rev.url);
+                container.appendChild(rcard);
+            })
+            
+        })
     });
-    document.querySelector(".sidebar .data")
+    
 }
 
 async function fetchThings(query, type) {
@@ -73,9 +90,19 @@ async function fetchThings(query, type) {
         const chances = match(query, data.results);
         return data.results[chances.index];
     } else {
+        console.error("Failed to fetch data from jikan.moe")
     }
 }
 
+async function fetchReviews(id, type) {
+    let request = await fetch(`https://api.jikan.moe/v3/${type}/${id}/reviews`);
+    if(request.ok) {
+        let data = await request.json();
+        return data.reviews;
+    } else {
+        console.error("Failed to fetch reviews from jikan.moe");
+    }
+}
 function match(query, results) {
     const res = findBestMatch(query, results.map(x => x.title));
     return { index: res.bestMatchIndex, rating: res.bestMatch.rating}
