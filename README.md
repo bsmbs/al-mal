@@ -14,9 +14,10 @@ currently it's very early version but it works wow
 ![AL MAL](https://i.imgur.com/pXqpKNZ.png)
 
 ## todo
-[ ] Fix some bugs with reviews
-[ ] Recommendations
-[ ] Articles
+- [x] Reviews
+- [ ] Fix some bugs with reviews
+- [ ] Recommendations
+- [ ] Articles
 
 ## Credits
 * MAL ofc
