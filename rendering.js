@@ -30,7 +30,7 @@ function vElement(content) {
 
 function reviewCard(av, content, likes, href) {
     let card = document.createElement("div");
-    card.classList.add("review-card", "review");
+    card.classList.add("review-card", "review", "almal");
     card.style.marginBottom = "20px";
     card.style.display = "grid";
     card.style.gridTemplateColumns = "50px auto";

@@ -1,7 +1,12 @@
 window.onclick = function(event) {
-    if(event.target.nodeName == "A" || event.target.parentNode.nodeName == "A") {
+    //console.dir({nodeName: event.target.nodeName, parentNode: event.target.parentNode.nodeName, classList: event.target.className})
+    if(event.target.nodeName == "A" 
+    || event.target.parentNode.nodeName == "A"
+    || event.target.parentNode.parentNode.nodeName == "A"
+    || (event.target.nodeName == "SPAN" && event.target.parentNode.nodeName == "SPAN")
+    || (event.target.nodeName == "DIV" && ["Alternative", "Prequel", "Sequel", "Source", "Spin Off", "Other", "Adaptation", "Side Story"].indexOf(event.target.innerText) > -1)
+    || (event.target.nodeName == "DIV" && event.target.className == "info")) {
         if(event.target.classList.contains("link")) return;
-        
         doThings();
     }
 }
@@ -9,7 +14,6 @@ setTimeout(doThings, 1000);
 
 
 window.addEventListener("popstate", function() {
-    clearThings();
     setTimeout(doThings, 1000);
 })
 
@@ -71,13 +75,21 @@ function doThings() {
         .then(reviews => {
             reviews.length = 5;
 
-            let container = document.querySelector(".review-wrap");
-            reviews.forEach(rev => {
-                let content = rev.content.split(" ").splice(0, 15).join(" ")+"...";
-                let rcard = reviewCard(rev.reviewer.image_url, content, rev.helpful_count, rev.url);
-                container.appendChild(rcard);
-            })
-            
+            let counter = 0;
+            let interval = setInterval(function() {
+                console.log("interval"+counter)
+                let container = document.querySelector(".review-wrap");
+                counter++;
+                if(container || counter > 5) {
+                    console.log("cleared at "+counter)
+                    clearInterval(interval);
+                }
+                reviews.forEach(rev => {
+                    let content = rev.content.split(" ").splice(0, 15).join(" ")+"...";
+                    let rcard = reviewCard(rev.reviewer.image_url, content, rev.helpful_count, rev.url);
+                    container.appendChild(rcard);
+                })
+            }, 200) 
         })
     });
     
