@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "AL MAL",
     "author": "pizza61",
-    "version": "0.2",
+    "version": "0.3",
     "description": "Extends AniList with data from MyAnimeList (powered by jikan.moe)",
     "icons": {
         "48": "icons/icon-48.png"
@@ -15,7 +15,7 @@
     "content_scripts": [
         {
             "matches": ["*://anilist.co/*"],
-            "js": ["almal.js", "compare-strings.js", "rendering.js"]
+            "js": ["src/almal.js", "src/compare-strings.js", "src/rendering.js"]
         }
     ],
     "permissions": [

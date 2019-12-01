@@ -36,20 +36,20 @@ function reviewCard(av, content, likes, href) {
     card.style.gridTemplateColumns = "50px auto";
 
     let user = document.createElement("a");
-    user.classList.add("user");
+    user.classList.add("user", "almal");
     user.setAttribute("data-src", av);
     user.setAttribute("data-v-24561a98", "");
     user.setAttribute("lazy", "loaded");
     user.style.backgroundImage = "url('"+av+"')";
 
     let contentEl = document.createElement("a");
-    contentEl.classList.add("content");
+    contentEl.classList.add("content", "almal");
     contentEl.href = href;
     contentEl.setAttribute("data-v-24561a98", "");
 
     let summary = document.createElement("div");
     summary.setAttribute("data-v-24561a98", "");
-    summary.classList.add("summary");
+    summary.classList.add("summary", "almal");
     summary.innerText = content;
 
     let tooltip = document.createElement("div");
@@ -61,4 +61,37 @@ function reviewCard(av, content, likes, href) {
     card.append(user, contentEl);
 
     return card;
+}
+
+function gridSectionWrap() {
+    let el = document.createElement("div");
+    el.classList.add("grid-section-wrap", "almal");
+    el.setAttribute("data-v-72ecf676", "");
+    return el;
+}
+
+function themesGrid(title, th) {
+    let el = document.createElement("div");
+    el.classList.add("almal");
+
+    let link = document.createElement("h2");
+    link.classList.add("link", "almal");
+    link.innerText = title;
+
+    let content = document.createElement("div");
+    content.classList.add("follow", "almal");
+    content.style.background = "rgb(var(--color-foreground))";
+    content.style.padding = "12px";
+    content.style.fontSize = "1.2rem";
+    
+    th.forEach((theme, i) => {
+        let themeEl = document.createElement("div");
+        themeEl.style.padding = "4px";
+        themeEl.innerText = `#${i+1}: ${theme}`;
+
+        content.append(themeEl);
+    })
+
+    el.append(link, content);
+    return el;
 }
