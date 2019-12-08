@@ -1,7 +1,7 @@
 let currentId, contentType;
 
 window.onclick = function(event) {
-    //console.dir({nodeName: event.target.nodeName, parentNode: event.target.parentNode.nodeName, classList: event.target.className})
+    //console.dir({action: 'click', nodeName: event.target.nodeName, parentNode: event.target.parentNode.nodeName, classList: event.target.className, el: event.target})
     // Reviews
     if(event.target.classList.contains("link") && event.target.innerText == "Reviews") {
         reviewThings();
@@ -16,6 +16,7 @@ window.onclick = function(event) {
     || (event.target.nodeName == "DIV" && event.target.className == "info")) {
         if(event.target.classList.contains("link")) return;
         if(event.target.classList.contains("almal")) return;
+        //console.log("doing things")
         doThings();
     }
 }
@@ -34,7 +35,9 @@ function doThings() {
     clearThings();
     let title = document.querySelector('h1').innerText;
     contentType = window.location.pathname.split("/")[1];
-    fetchThings(title, contentType)
+    const format = [].find.call(document.querySelectorAll(".sidebar .data .data-set"), function(s) {return s.childNodes[0].innerText == "Format";}).childNodes[2].innerText;
+    
+    fetchThings(title, contentType, format)
     .then(result => {
         currentId = result.mal_id;
         initThings();
@@ -42,7 +45,7 @@ function doThings() {
 
         let mids = document.querySelectorAll(".sidebar .data .data-set");
         let mid = [].find.call(mids, function(s) {
-            return s.childNodes[0].innerText == "Studios";
+            return s.childNodes[0].innerText == "Favorites";
         });
 
         /*                   */
@@ -56,7 +59,6 @@ function doThings() {
         let scoreV = vElement(result.score);
 
         score.append(scoreT, scoreV)
-
         // Rating
         if(contentType == "anime") {
             let rating = dataSet();
@@ -153,12 +155,23 @@ function reviewThings() {
     })    
 }
 
-async function fetchThings(query, type) {
+async function fetchThings(query, type, format) {
     let request = await fetch(`https://api.jikan.moe/v3/search/${type}?q=${encodeURIComponent(query)}&limit=5`);
     if(request.ok) {
         let data = await request.json();
-        const chances = match(query, data.results);
-        const id = data.results[chances.index].mal_id;
+        //const chances = match(query, data.results);
+        //chances.ratings.sort((a,b) => b.rating-a.rating).find()
+
+        const rule = rules.find(x => x.al == query);
+        let id;
+
+        if(rule) id = rule.mal;
+        else {
+            id = data.results.find(x => {
+                if(x.type == "Novel" && format == "Light Novel") return 1
+                else return x.type.toLowerCase() == format.toLowerCase()
+            }).mal_id;
+        }
 
         let areq = await fetch(`https://api.jikan.moe/v3/${type}/${id}`);
         if(areq.ok) {
@@ -181,9 +194,4 @@ async function fetchReviews(id, type) {
     } else {
         console.error("Failed to fetch reviews from jikan.moe");
     }
-}
-
-function match(query, results) {
-    const res = findBestMatch(query, results.map(x => x.title));
-    return { index: res.bestMatchIndex, rating: res.bestMatch.rating}
 }
