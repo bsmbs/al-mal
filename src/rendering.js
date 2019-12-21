@@ -95,3 +95,17 @@ function themesGrid(title, th) {
     el.append(link, content);
     return el;
 }
+
+function loading() {
+    let loadingEl = document.createElement("div");
+    loadingEl.innerText = "Loading...";
+    loadingEl.classList.add("almal-loading")
+
+    let parent = document.querySelector(".sidebar .data");
+    document.querySelector(".sidebar").insertBefore(loadingEl, parent);
+}
+
+function removeLoading() {
+    let loadingEl = document.querySelector(".almal-loading");
+    loadingEl.remove()
+}

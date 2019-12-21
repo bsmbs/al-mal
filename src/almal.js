@@ -17,6 +17,7 @@ window.onclick = function(event) {
         if(event.target.classList.contains("link")) return;
         if(event.target.classList.contains("almal")) return;
         //console.log("doing things")
+        loading();
         doThings();
     }
 }
@@ -36,13 +37,14 @@ function doThings() {
     let title = document.querySelector('h1').innerText;
     contentType = window.location.pathname.split("/")[1];
     const format = [].find.call(document.querySelectorAll(".sidebar .data .data-set"), function(s) {return s.childNodes[0].innerText == "Format";}).childNodes[2].innerText;
-    
+
     fetchThings(title, contentType, format)
     .then(result => {
+        clearThings();
         currentId = result.mal_id;
         initThings();
-        let parent = document.querySelector(".sidebar .data");
 
+        let parent = document.querySelector(".sidebar .data");
         let mids = document.querySelectorAll(".sidebar .data .data-set");
         let mid = [].find.call(mids, function(s) {
             return s.childNodes[0].innerText == "Favorites";
@@ -98,6 +100,7 @@ function doThings() {
         // Insert in sidebar
         parent.insertBefore(score, parent.firstChild);
         parent.insertBefore(link, parent.firstChild);
+        removeLoading();
 
         /*                   */
         /*     Overview      */
