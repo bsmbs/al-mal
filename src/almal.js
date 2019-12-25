@@ -1,4 +1,4 @@
-let currentId, contentType;
+let currentId, currentTitle, contentType;
 
 window.onclick = function(event) {
     //console.dir({action: 'click', nodeName: event.target.nodeName, parentNode: event.target.parentNode.nodeName, classList: event.target.className, el: event.target})
@@ -35,6 +35,7 @@ function clearThings() {
 function doThings() {
     clearThings();
     let title = document.querySelector('h1').innerText;
+    currentTitle = title;
     contentType = window.location.pathname.split("/")[1];
     const format = [].find.call(document.querySelectorAll(".sidebar .data .data-set"), function(s) {return s.childNodes[0].innerText == "Format";}).childNodes[2].innerText;
 
@@ -53,7 +54,6 @@ function doThings() {
         /*                   */
         /*      Sidebar      */
         /*                   */
-
         // MAL Score
         let score = dataSet();
 
@@ -100,7 +100,6 @@ function doThings() {
         // Insert in sidebar
         parent.insertBefore(score, parent.firstChild);
         parent.insertBefore(link, parent.firstChild);
-        removeLoading();
 
         /*                   */
         /*     Overview      */
@@ -112,9 +111,11 @@ function doThings() {
             let op = themesGrid("Opening themes", result.opening_themes);
             let ed = themesGrid("Ending themes", result.ending_themes);
             grid.append(op, ed);
-            let overview = document.querySelector(".overview");
+            console.dir(overview)
             overview.insertBefore(grid, overview.lastChild);
         }
+        
+        removeLoading();
     });
     
 }

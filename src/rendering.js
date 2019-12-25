@@ -73,11 +73,10 @@ function gridSectionWrap() {
 function themesGrid(title, th) {
     let el = document.createElement("div");
     el.classList.add("almal");
-
+    
     let link = document.createElement("h2");
     link.classList.add("link", "almal");
     link.innerText = title;
-
     let content = document.createElement("div");
     content.classList.add("follow", "almal");
     content.style.background = "rgb(var(--color-foreground))";
@@ -86,10 +85,26 @@ function themesGrid(title, th) {
     
     th.forEach((theme, i) => {
         let themeEl = document.createElement("div");
+        let song = theme.match(/\"(.*?)\"/)[1];
         themeEl.style.padding = "4px";
-        themeEl.innerText = `#${i+1}: ${theme}`;
 
-        content.append(themeEl);
+        let sq = document.createElement("a");
+        sq.innerText = "YouTube";
+        sq.style.color = "rgb(var(--color-blue))";
+        sq.style.fontSize = "1.3rem";
+        sq.style.fontWeight = "500";
+        sq.style.paddingBottom = "5px";
+        sq.classList.add("almal");
+        sq.href = "https://www.youtube.com/results?search_query="+encodeURIComponent(`${currentTitle} ${title.split(" ")[0]} ${i+1}`);
+        sq.target = "_blank"
+
+        let desc = document.createElement("span");
+        desc.innerText = `#${i+1}: ${theme} `;
+
+        themeEl.append(desc);
+        themeEl.append(sq);
+
+        content.append(themeEl)
     })
 
     el.append(link, content);
